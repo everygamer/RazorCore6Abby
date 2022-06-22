@@ -14,7 +14,6 @@ namespace Abby.Web.Pages
 
         public void OnGet()
         {
-
         }
     }
 }
