@@ -1,0 +1,56 @@
+﻿
+@if(TempData["success"]!=null)
+{
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script type="text/javascript">
+        toastr.options = {
+            "progressBar": true,
+            "positionClass": "toast-top-center",
+            "newestOnTop": true
+        }
+        toastr.success('@TempData["success"]', 'SUCCESS', {timeOut: 2000})
+    </script>
+}
+
+@if(TempData["warning"]!=null)
+{
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script type="text/javascript">
+        toastr.options = {
+            "progressBar": true,
+            "positionClass": "toast-top-center",
+            "newestOnTop": true
+        }
+        toastr.warning('@TempData["warning"]', 'WARNING!', {timeOut: 3000});
+    </script>
+}
+
+@if(TempData["info"]!=null)
+{
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script type="text/javascript">
+        toastr.options = {
+            "progressBar": true,
+            "positionClass": "toast-top-center",
+            "newestOnTop": true
+        }
+        toastr.warning('@TempData["info"]', 'INFO', {timeOut: 2000});
+    </script>
+}
+
+@if(TempData["error"]!=null)
+{
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script type="text/javascript">
+        toastr.options = {
+            "progressBar": true,
+            "positionClass": "toast-top-center",
+            "newestOnTop": true
+        }
+        toastr.error('@TempData["error"]', 'ERROR!!!', {timeOut: 5000})
+    </script>
+}
