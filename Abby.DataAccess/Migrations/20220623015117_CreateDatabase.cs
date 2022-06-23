@@ -2,9 +2,9 @@
 
 #nullable disable
 
-namespace Abby.Web.Migrations
+namespace Abby.DataAccess.Migrations
 {
-    public partial class CreateApplicationDb : Migration
+    public partial class CreateDatabase : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
