@@ -2,12 +2,13 @@ using Abby.Models;
 using Abby.DataAccess.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Abby.DataAccess.Repository.IRepository;
 
 namespace Abby.Web.Pages.Admin.FoodTypes
 {
     public class CreateModel : PageModel
     {
-        private readonly ApplicationDbContext _db;
+        private readonly IUnitOfWork _unitOfWork;
 
         // BindProperty allows us to use this attribute automatically in the OnPost call
         // instead of passing it in as a value EX: OnPost(Category category) is replaced
@@ -15,9 +16,9 @@ namespace Abby.Web.Pages.Admin.FoodTypes
         [BindProperty]
         public FoodType FoodType { get; set; }
 
-        public CreateModel(ApplicationDbContext db)
+        public CreateModel(IUnitOfWork unitOfWork)
         {
-            _db = db;
+            _unitOfWork = unitOfWork;
         }
 
         public void OnGet()
@@ -29,8 +30,8 @@ namespace Abby.Web.Pages.Admin.FoodTypes
         {
             if (ModelState.IsValid)
             {
-                await _db.FoodType.AddAsync(FoodType);
-                await _db.SaveChangesAsync();
+                _unitOfWork.FoodType.Add(FoodType);
+                await _unitOfWork.SaveAsync();
                 return RedirectToPage("Index");
             }
             return Page();

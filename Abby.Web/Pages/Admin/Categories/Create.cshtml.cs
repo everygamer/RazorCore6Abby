@@ -2,12 +2,13 @@ using Abby.Models;
 using Abby.DataAccess.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Abby.DataAccess.Repository.IRepository;
 
 namespace Abby.Web.Pages.Admin.Categories
 {
     public class CreateModel : PageModel
     {
-        private readonly ApplicationDbContext _db;
+        private readonly IUnitOfWork _unitOfWork;
 
         // BindProperty allows us to use this attribute automatically in the OnPost call
         // instead of passing it in as a value EX: OnPost(Category category) is replaced
@@ -15,9 +16,9 @@ namespace Abby.Web.Pages.Admin.Categories
         [BindProperty]
         public Category Category { get; set; }
 
-        public CreateModel(ApplicationDbContext db)
+        public CreateModel(IUnitOfWork unitOfWork)
         {
-            _db = db;
+            _unitOfWork = unitOfWork;
         }
 
         public void OnGet()
@@ -33,8 +34,8 @@ namespace Abby.Web.Pages.Admin.Categories
             }
             if (ModelState.IsValid)
             {
-                await _db.Category.AddAsync(Category);
-                await _db.SaveChangesAsync();
+                _unitOfWork.Category.Add(Category);
+                await _unitOfWork.SaveAsync();
                 return RedirectToPage("Index");
             }
             return Page();

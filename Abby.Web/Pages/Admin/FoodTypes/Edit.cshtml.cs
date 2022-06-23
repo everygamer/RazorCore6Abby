@@ -2,12 +2,13 @@ using Abby.Models;
 using Abby.DataAccess.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Abby.DataAccess.Repository.IRepository;
 
 namespace Abby.Web.Pages.Admin.FoodTypes
 {
     public class EditModel : PageModel
     {
-        private readonly ApplicationDbContext _db;
+        private readonly IUnitOfWork _unitOfWork;
 
         // BindProperty allows us to use this attribute automatically in the OnPost call
         // instead of passing it in as a value EX: OnPost(Category category) is replaced
@@ -15,15 +16,15 @@ namespace Abby.Web.Pages.Admin.FoodTypes
         [BindProperty]
         public FoodType FoodType { get; set; }
 
-        public EditModel(ApplicationDbContext db)
+        public EditModel(IUnitOfWork unitOfWork)
         {
-            _db = db;
+            _unitOfWork = unitOfWork;
         }
 
         public async void OnGet(int Id)
         {
             // throws execption if record not found
-            FoodType = _db.FoodType.Find(Id);
+            FoodType = _unitOfWork.FoodType.GetFirstOrDefault(u=>u.Id==Id);
 
             // just returns null if not found
             //Category = _db.Category.FirstOrDefault(u=>u.Id == Id);
@@ -43,8 +44,8 @@ namespace Abby.Web.Pages.Admin.FoodTypes
         {
             if (ModelState.IsValid)
             {
-                _db.FoodType.Update(FoodType);
-                await _db.SaveChangesAsync();
+                _unitOfWork.FoodType.Update(FoodType);
+                await _unitOfWork.SaveAsync();
                 TempData["success"] = "Successfully edited Food Type";
                 return RedirectToPage("Index");
             }
