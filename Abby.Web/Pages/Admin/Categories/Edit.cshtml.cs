@@ -3,9 +3,9 @@ using Abby.DataAccess.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace Abby.Web.Pages.Categories
+namespace Abby.Web.Pages.Admin.Categories
 {
-    public class DeleteModel : PageModel
+    public class EditModel : PageModel
     {
         private readonly ApplicationDbContext _db;
 
@@ -15,7 +15,7 @@ namespace Abby.Web.Pages.Categories
         [BindProperty]
         public Category Category { get; set; }
 
-        public DeleteModel(ApplicationDbContext db)
+        public EditModel(ApplicationDbContext db)
         {
             _db = db;
         }
@@ -41,20 +41,19 @@ namespace Abby.Web.Pages.Categories
 
         public async Task<IActionResult> OnPost()
         {
-            
-            // find object
-            var categoryFromDb = _db.Category.Find(Category.Id);
-
-            if (categoryFromDb != null)
+            if (Category.Name == Category.DisplayOrder.ToString())
             {
-                _db.Category.Remove(categoryFromDb);
+                ModelState.AddModelError("Category.Name", "The Display Order cannot exactly match the name!");
+            }
+            if (ModelState.IsValid)
+            {
+                _db.Category.Update(Category);
                 await _db.SaveChangesAsync();
-                TempData["success"] = "Successfully deleted Category";
+                TempData["success"] = "Successfully edited Category";
                 return RedirectToPage("Index");
             }
-            TempData["error"] = "Error deleting Category";
+            TempData["error"] = "Error editing Category";
             return Page();
- 
         }
     }
 }

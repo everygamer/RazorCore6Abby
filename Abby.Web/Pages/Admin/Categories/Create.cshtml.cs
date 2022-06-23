@@ -3,9 +3,9 @@ using Abby.DataAccess.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace Abby.Web.Pages.Categories
+namespace Abby.Web.Pages.Admin.Categories
 {
-    public class EditModel : PageModel
+    public class CreateModel : PageModel
     {
         private readonly ApplicationDbContext _db;
 
@@ -15,27 +15,13 @@ namespace Abby.Web.Pages.Categories
         [BindProperty]
         public Category Category { get; set; }
 
-        public EditModel(ApplicationDbContext db)
+        public CreateModel(ApplicationDbContext db)
         {
             _db = db;
         }
 
-        public async void OnGet(int Id)
+        public void OnGet()
         {
-            // throws execption if record not found
-            Category = _db.Category.Find(Id);
-
-            // just returns null if not found
-            //Category = _db.Category.FirstOrDefault(u=>u.Id == Id);
-
-            // if multiple entity returned, it throws exception
-            //Category = _db.Category.Single(u => u.Id == Id);
-
-            // if nothing is found, returns null, if multiple returns, exception
-            //Category = _db.Category.SingleOrDefault(u => u.Id == Id);
-
-            // can return multiple records, so we have to add .FirstOrDefault to get 1 record
-            //Category = _db.Category.Where(u => u.Id == Id).FirstOrDefault();
 
         }
 
@@ -47,12 +33,10 @@ namespace Abby.Web.Pages.Categories
             }
             if (ModelState.IsValid)
             {
-                _db.Category.Update(Category);
+                await _db.Category.AddAsync(Category);
                 await _db.SaveChangesAsync();
-                TempData["success"] = "Successfully edited Category";
                 return RedirectToPage("Index");
             }
-            TempData["error"] = "Error editing Category";
             return Page();
         }
     }
