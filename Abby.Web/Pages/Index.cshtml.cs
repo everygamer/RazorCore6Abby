@@ -12,8 +12,9 @@ namespace Abby.Web.Pages
             _logger = logger;
         }
 
-        public void OnGet()
+        public IActionResult OnGet()
         {
+            return RedirectToPage("Customer/HomePage/Index");
         }
     }
 }

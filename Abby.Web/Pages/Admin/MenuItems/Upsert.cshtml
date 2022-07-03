@@ -1,0 +1,98 @@
+﻿@page
+@model Abby.Web.Pages.Admin.MenuItems.UpsertModel
+
+<!-- NOTE: Added enctype to form tag support image upload -->
+<form method="post" enctype="multipart/form-data">
+    <input hidden asp-for="MenuItem.Id" />
+    <div class="border p-3 m-4">
+        <div class="row pb-2">
+            <div class="col-9">
+                <h2 class="text-primary pl-3">
+                    @(Model.MenuItem.Id != 0 ? "Update" : "Create") Menu Item
+                </h2>
+                <hr />
+                <div class="mb-3">
+                    <label asp-for="MenuItem.Name"></label>
+                    <input asp-for="MenuItem.Name" class="form-control" />
+                    <span asp-validation-for="MenuItem.Name" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="MenuItem.Description"></label>
+                    <textarea asp-for="MenuItem.Description" class="form-control"></textarea>
+                    <span asp-validation-for="MenuItem.Description" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="MenuItem.Price"></label>
+                    <input asp-for="MenuItem.Price" class="form-control" />
+                    <span asp-validation-for="MenuItem.Price" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="MenuItem.ImageURL"></label>
+                    <input type="file" name="files" id="uploadBox" class="form-control" />
+                </div>
+                <div class="mb-3">
+                    <label asp-for="MenuItem.CategoryId"></label>
+                    <select asp-for="MenuItem.CategoryId" asp-items="Model.CategoryList" class="form-select">
+                        <option disabled selected>-Select Category-</option>
+                    </select>
+                    <span asp-validation-for="MenuItem.CategoryId" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="MenuItem.FoodTypeId"></label>
+                    <select asp-for="MenuItem.FoodTypeId" asp-items="Model.FoodTypeList" class="form-select">
+                        <option disabled selected>-Select Food Type-</option>
+                    </select>
+                    <span asp-validation-for="MenuItem.FoodTypeId" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-3">
+                @if(Model.MenuItem.Id!=0)
+                {
+                    <img src="@Model.MenuItem.ImageURL" width="100%" style="border-radius: 5px; border: 1px solid #bbb9b9" />
+                }
+            </div>
+        </div>
+        @if(Model.MenuItem.Id != 0)
+        {
+            <button type="submit" class="btn btn-primary" style="width:150px;">Update</button>
+        }
+        else
+        {
+            <button type="submit" onclick="return ValidateInput()" class="btn btn-primary" style="width:150px;">Create</button>
+        }
+
+        
+        <a asp-page="./Index" class="btn btn-secondary" style="width:150px;">Return to List</a>
+    </div>
+</form>
+
+@section Scripts
+{
+
+    <script>
+        tinymce.init({
+            selector: 'textarea',
+            plugins: 'advlist autolink lists link image charmap preview anchor pagebreak',
+            toolbar_mode: 'floating',
+            menubar: false
+        });
+
+        function ValidateInput() {
+            if (document.getElementById("uploadBox").value == "") {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Please upload an image!',
+                });
+                return false;
+            }
+            return true;
+        }
+    </script>
+
+
+    <!-- This is being added in a Scripts section because it contains scripts
+        if it was just HTML then it could be added in the page above.
+    -->
+    <partial name="_ValidationScriptsPartial" />
+}

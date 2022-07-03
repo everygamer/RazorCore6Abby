@@ -19,6 +19,9 @@ namespace Abby.DataAccess.Repository
         public Repository(ApplicationDbContext db)
         {
             _db = db;
+            // the following is how properties are included if we were not using repository pattern
+            // this would replace the includeProperties defined below
+            //_db.MenuItem.Include(u => u.FoodType).Include(u => u.Category);
             this.dbSet = db.Set<T>();
         }
 
@@ -27,18 +30,44 @@ namespace Abby.DataAccess.Repository
             dbSet.Add(entity);
         }
 
-        public IEnumerable<T> GetAll()
-        {
-            IQueryable<T> query = dbSet;
-            return query.ToList();
-        }
-
-        public T GetFirstOrDefault(Expression<Func<T, bool>>? filter = null)
+        public IEnumerable<T> GetAll(Expression<Func<T, bool>>? filter = null,
+                              Func<IQueryable<T>, IOrderedQueryable<T>>? orderby = null,
+                              string? includeProperties = null)
         {
             IQueryable<T> query = dbSet;
             if (filter != null)
             {
                 query = query.Where(filter);
+            }
+            if (includeProperties != null)
+            {
+                foreach(var includeProperty in includeProperties.Split(
+                    new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                {
+                    query = query.Include(includeProperty.Trim());
+                }
+            }
+            if (orderby != null)
+            {
+                return orderby(query).ToList();
+            }
+            return query.ToList();
+        }
+
+        public T GetFirstOrDefault(Expression<Func<T, bool>>? filter = null, string ? includeProperties = null)
+        {
+            IQueryable<T> query = dbSet;
+            if (filter != null)
+            {
+                query = query.Where(filter);
+            }
+            if (includeProperties != null)
+            {
+                foreach (var includeProperty in includeProperties.Split(
+                    new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                {
+                    query = query.Include(includeProperty.Trim());
+                }
             }
             return query.FirstOrDefault();
         }

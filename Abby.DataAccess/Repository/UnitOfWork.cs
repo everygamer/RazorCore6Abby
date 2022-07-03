@@ -16,11 +16,14 @@ namespace Abby.DataAccess.Repository
 
         public IFoodTypeRepository FoodType { get; private set; }
 
+        public IMenuItemRepository MenuItem { get; private set; }
+
         public UnitOfWork(ApplicationDbContext db)
         {
             _db = db;
             Category = new CategoryRepository(db);
             FoodType = new FoodTypeRepository(db);
+            MenuItem = new MenuItemRepository(db);  
         }
 
         public void Save()

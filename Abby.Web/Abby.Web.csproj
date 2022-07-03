@@ -22,12 +22,15 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Pages\Customer\" />
+    <Folder Include="Pages\Customer\ShoppingCart\" />
   </ItemGroup>
 
   <ItemGroup>
     <Content Update="wwwroot\css\bootswatch_lux.css">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Update="wwwroot\js\menuItem.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
 
